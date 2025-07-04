@@ -14,9 +14,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ownedProjects      Project[]        @relation("UserOwnedProjects")
-  assignedTasks      Task[]           @relation("UserAssignedTasks")
-  projectMemberships ProjectMember[]
+  ownedProjects      Project[]     @relation("UserOwnedProjects")
+  assignedTasks      Task[]        @relation("UserAssignedTasks")
+  memberships        Membership[]
 }
 
 model Project {
@@ -26,9 +26,9 @@ model Project {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  owner     User             @relation("UserOwnedProjects", fields: [ownerId], references: [id])
-  tasks     Task[]           @relation("ProjectTasks")
-  members   ProjectMember[]
+  owner       User           @relation("UserOwnedProjects", fields: [ownerId], references: [id])
+  tasks       Task[]         @relation("ProjectTasks")
+  memberships Membership[]
 }
 
 model Task {
@@ -45,7 +45,7 @@ model Task {
   assignee    User     @relation("UserAssignedTasks", fields: [assigneeId], references: [id])
 }
 
-model ProjectMember {
+model Membership {
   id        String   @id @default(uuid())
   userId    String
   projectId String

@@ -2,7 +2,7 @@ import prisma from "../configs/prismaClient";
 import { projectMemberRequest } from "../dto/projectMember.dto";
 
 export const createProjectMember = async (data: projectMemberRequest) => {
-    return prisma.projectMember.create({
+    return prisma.membership.create({
         data,
     });
 };
@@ -14,7 +14,7 @@ export const getAllProjectMembers = async (projectId?: string) => {
         where.projectId = projectId;
     }
 
-    return prisma.projectMember.findMany({
+    return prisma.membership.findMany({
         where,
         include: {
             user: {
@@ -34,7 +34,7 @@ export const getAllProjectMembers = async (projectId?: string) => {
 };
 
 export const getProjectMemberById = async (id: string) => {
-    return prisma.projectMember.findUnique({
+    return prisma.membership.findUnique({
         where: {
             id,
         },
@@ -56,7 +56,7 @@ export const getProjectMemberById = async (id: string) => {
 };
 
 export const deleteProjectMember = async (id: string) => {
-    return prisma.projectMember.delete({
+    return prisma.membership.delete({
         where: {
             id,
         },
@@ -64,7 +64,7 @@ export const deleteProjectMember = async (id: string) => {
 };
 
 export const findProjectMember = async (userId: string, projectId: string) => {
-    return prisma.projectMember.findFirst({
+    return prisma.membership.findFirst({
         where: {
             userId,
             projectId,

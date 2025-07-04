@@ -8,26 +8,9 @@ export interface taskRequest {
     description?: string;
 }
 
-export interface taskResponse {
-    id: string;
-    title: string;
-    description?: string;
-    status: TaskStatus;
-    projectId: string;
-    assigneeId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 export interface taskUpdate {
     title?: string;
     description?: string;
     status?: TaskStatus;
     assigneeId?: string;
-}
-
-export interface taskSorting {
-    title?: string;
-    projectName?: string;
-    status?: TaskStatus;
 }

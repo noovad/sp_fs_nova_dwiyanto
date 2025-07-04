@@ -3,7 +3,7 @@ import { HttpResponse } from '../utils/httpResponse';
 import { extractForeignKey } from '../utils/extractForeignKey';
 import appError from '../errors/app.error';
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, nex) => {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
         const foreignKeyErrorColumn = extractForeignKey(err.meta);
         const prismaErrorMap = {

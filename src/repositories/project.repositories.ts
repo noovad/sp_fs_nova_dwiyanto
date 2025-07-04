@@ -51,7 +51,7 @@ export const getProjectById = async (id: string) => {
                 },
             },
             tasks: true,
-            members: {
+            memberships: {
                 include: {
                     user: {
                         select: {
