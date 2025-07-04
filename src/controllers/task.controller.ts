@@ -27,7 +27,6 @@ export const getAllTasksController = asyncHandler(
 
 export const getTaskByIdController = asyncHandler(
     async (req: Request, res: Response) => {
-        console.log(req.params.id);
         const task = await taskService.getTaskByIdService(req.params.id);
         res.status(200).json(
             HttpResponse.OK('Task retrieved successfully', task)

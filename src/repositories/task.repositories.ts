@@ -1,5 +1,5 @@
 import prisma from "../configs/prismaClient";
-import { taskRequest } from "../dto/task.dto";
+import { taskRequest, taskUpdate } from "../dto/task.dto";
 
 export const createTask = async (data: taskRequest) => {
   return prisma.task.create({
@@ -27,10 +27,9 @@ export const getAllTasks = async (options: {
 
   if (projectName) {
     where.project = {
-      title: projectName,
+      name: projectName,
     };
   }
-
 
   return prisma.task.findMany({
     where,
@@ -45,7 +44,7 @@ export const getTaskById = async (id: string) => {
   });
 };
 
-export const updateTask = async (id: string, data: taskRequest) => {
+export const updateTask = async (id: string, data: taskUpdate) => {
   return prisma.task.update({
     where: {
       id,
