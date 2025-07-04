@@ -3,8 +3,10 @@ import taskRoute from "./taskRoute";
 import userRoute from "./userRoute";
 import projectRoute from "./projectRoute";
 import projectMemberRoute from "./projectMemberRoute";
+import authRoute from "./authRoute";
 
 export default function registerRoutes(app: express.Application) {
+    app.use('/', authRoute);
     app.use('/', taskRoute);
     app.use('/', userRoute);
     app.use('/', projectRoute);
