@@ -5,6 +5,7 @@ import { PORT } from "./configs/env";
 import errorHandler from "./middlewares/errorHandler.middleware";
 import { createServer } from "http";
 import { initSocket } from "./configs/socket";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const httpServer = createServer(app);
@@ -12,6 +13,7 @@ initSocket(httpServer);
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 registerRoutes(app);
 app.use(errorHandler);
 

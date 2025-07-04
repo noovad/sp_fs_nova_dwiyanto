@@ -26,7 +26,6 @@ export const getAllProjectMembers = asyncHandler(
 
 export const getProjectMemberById = asyncHandler(
     async (req: Request, res: Response) => {
-        console.log(req.params.id);
         const member = await projectMemberService.getProjectMemberById(req.params.id);
         res.status(200).json(
             HttpResponse.OK('Project member retrieved successfully', member)
