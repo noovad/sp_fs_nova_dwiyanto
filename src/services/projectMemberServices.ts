@@ -11,16 +11,8 @@ export const createProjectMember = async (data: projectMemberRequestByEmail, req
         throw new AppError(HttpResponse.NOT_FOUND("Project not found"));
     }
 
-    // Only owner can add member
     if (project.ownerId !== requesterId) {
         throw new AppError(HttpResponse.FORBIDDEN("Only the project owner can add members"));
-    }
-
-    const existingMember = await projectMemberRepository.findProjectMemberByEmail(
-        data.email,
-    );
-    if (existingMember) {
-        throw new AppError(HttpResponse.CONFLICT("Member already exists in the project"));
     }
 
     const user = await getUserByEmail(data.email);
@@ -30,6 +22,15 @@ export const createProjectMember = async (data: projectMemberRequestByEmail, req
 
     if (user.id === project.ownerId) {
         throw new AppError(HttpResponse.CONFLICT("Project owner cannot be added as a member"));
+    }
+
+    const existingMember = await projectMemberRepository.checkIsMember(
+        data.projectId,
+        user.id,
+    );
+
+    if (existingMember) {
+        throw new AppError(HttpResponse.CONFLICT("Member already exists in the project"));
     }
 
     const projectMemberData: projectMemberRequest = {
