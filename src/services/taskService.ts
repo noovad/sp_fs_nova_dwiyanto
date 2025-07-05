@@ -1,13 +1,15 @@
 import { taskRequest } from "../dto/task.dto";
 import AppError from "../errors/app.error";
-import { checkIsMember } from "../repositories/projectMemberRepositories";
+import { findProjectMember } from "../repositories/projectMemberRepositories";
 import { checkIsOwner } from "../repositories/projectRepositories";
 import * as taskRepositories from "../repositories/taskRepositories";
 import { HttpResponse } from "../utils/httpResponse";
 
 export const createTaskService = async (data: taskRequest) => {
-    const isMember = await checkIsMember(data.projectId, data.assigneeId);
-    const isOwner = await checkIsOwner(data.projectId, data.assigneeId);
+    const isMember = await findProjectMember(data.assigneeId, data.projectId);
+    const isOwner = await checkIsOwner(data.assigneeId, data.projectId);
+    console.log("isMember", isMember);
+    console.log("isOwner", isOwner);
     if (!isMember && !isOwner) {
         throw new AppError(HttpResponse.FORBIDDEN("Asignee must be a member or owner of the project"));
     }
@@ -26,7 +28,7 @@ export const getAllTasksService = async (
 };
 
 export const updateTaskService = async (id: string, data: taskRequest) => {
-    const isMember = await checkIsMember(data.projectId, data.assigneeId);
+    const isMember = await findProjectMember(data.projectId, data.assigneeId);
     const isOwner = await checkIsOwner(data.projectId, data.assigneeId);
     if (!isMember && !isOwner) {
         throw new AppError(HttpResponse.FORBIDDEN("Asignee must be a member or owner of the project"));

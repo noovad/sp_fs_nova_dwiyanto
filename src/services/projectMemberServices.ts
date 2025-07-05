@@ -24,9 +24,9 @@ export const createProjectMember = async (data: projectMemberRequestByEmail, req
         throw new AppError(HttpResponse.CONFLICT("Project owner cannot be added as a member"));
     }
 
-    const existingMember = await projectMemberRepository.checkIsMember(
-        data.projectId,
+    const existingMember = await projectMemberRepository.findProjectMember(
         user.id,
+        data.projectId,
     );
 
     if (existingMember) {

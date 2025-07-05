@@ -37,7 +37,8 @@ export const getProjectBySlug = asyncHandler(
 
 export const updateProject = asyncHandler(
     async (req: Request, res: Response) => {
-        const project = await projectService.updateProject(req.params.id, req.body);
+        const userId = req.user?.userId;
+        const project = await projectService.updateProject(req.params.id, req.body, userId);
         res.status(200).json(
             HttpResponse.OK('Project updated successfully', project)
         );
@@ -46,7 +47,8 @@ export const updateProject = asyncHandler(
 
 export const deleteProject = asyncHandler(
     async (req: Request, res: Response) => {
-        await projectService.deleteProject(req.params.id);
+        const userId = req.user?.userId;
+        await projectService.deleteProject(req.params.id, userId);
         res.status(200).json(
             HttpResponse.OK('Project deleted successfully')
         );

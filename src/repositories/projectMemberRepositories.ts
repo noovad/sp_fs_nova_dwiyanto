@@ -103,8 +103,3 @@ export const findProjectMemberByEmail = async (email: string) => {
         },
     });
 };
-
-export const checkIsMember = async (userId: string, projectId: string) => {
-    const member = await findProjectMember(userId, projectId);
-    return !!member;
-}
