@@ -7,26 +7,22 @@ export const createProject = async (data: projectRequest) => {
     });
 };
 
-export const getAllProjects = async (options: {
-    name?: string;
-    ownerId?: string;
-}) => {
-    const { name, ownerId } = options;
-    const where: any = {};
-
-    if (name) {
-        where.name = {
-            contains: name,
-            mode: "insensitive",
-        };
-    }
-
-    if (ownerId) {
-        where.ownerId = ownerId;
-    }
+export const getAllProjects = async (options: { ownerId: string }) => {
+    const { ownerId } = options;
 
     return prisma.project.findMany({
-        where,
+        where: {
+            OR: [
+                { ownerId: ownerId },
+                {
+                    memberships: {
+                        some: {
+                            userId: ownerId,
+                        },
+                    },
+                },
+            ],
+        },
         include: {
             owner: {
                 select: {
@@ -38,10 +34,24 @@ export const getAllProjects = async (options: {
     });
 };
 
-export const getProjectById = async (id: string) => {
-    return prisma.project.findUnique({
+
+export const getProjectByName = async (name: string, userId: string) => {
+    return prisma.project.findFirst({
         where: {
-            id,
+            name: {
+                equals: name,
+                mode: "insensitive",
+            },
+            OR: [
+                { ownerId: userId },
+                {
+                    memberships: {
+                        some: {
+                            userId: userId,
+                        },
+                    },
+                },
+            ],
         },
         include: {
             owner: {

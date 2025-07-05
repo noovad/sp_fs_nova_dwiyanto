@@ -25,7 +25,7 @@ export const HttpResponse = {
     }),
     CONFLICT: {
         status: 409,
-        message: "Conflict",
+        message: "Data already exists.",
         code: "CONFLICT",
     },
     UNAUTHORIZED: {

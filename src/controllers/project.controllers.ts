@@ -5,7 +5,8 @@ import { HttpResponse } from "../utils/httpResponse";
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
-        const project = await projectService.createProject(req.body);
+        const userID = req.user?.userId;
+        const project = await projectService.createProject(req.body, userID);
         res.status(201).json(
             HttpResponse.CREATED('Project created successfully', project)
         );
@@ -14,10 +15,9 @@ export const createProject = asyncHandler(
 
 export const getAllProjects = asyncHandler(
     async (req: Request, res: Response) => {
-        const { name, ownerId } = req.query;
+        const userID = req.user?.userId;
         const projects = await projectService.getAllProjects({
-            name: name as string,
-            ownerId: ownerId as string,
+            ownerId: userID,
         });
         res.status(200).json(
             HttpResponse.OK('Projects retrieved successfully', projects)
@@ -25,9 +25,10 @@ export const getAllProjects = asyncHandler(
     }
 );
 
-export const getProjectById = asyncHandler(
+export const getProjectBySlug = asyncHandler(
     async (req: Request, res: Response) => {
-        const project = await projectService.getProjectById(req.params.id);
+        const userID = req.user?.userId;
+        const project = await projectService.getProjectBySlug(req.params.slug, userID);
         res.status(200).json(
             HttpResponse.OK('Project retrieved successfully', project)
         );

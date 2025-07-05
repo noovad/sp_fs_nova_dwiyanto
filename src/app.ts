@@ -11,8 +11,10 @@ const app = express();
 const httpServer = createServer(app);
 initSocket(httpServer);
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: process.env.FE_URL,
+  credentials: true,
+})); app.use(express.json());
 app.use(cookieParser());
 registerRoutes(app);
 app.use(errorHandler);
