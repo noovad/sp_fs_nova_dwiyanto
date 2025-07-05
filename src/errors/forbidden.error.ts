@@ -3,7 +3,7 @@ import AppError from "./app.error";
 
 class ForbiddenError extends AppError {
   constructor(details: any[] = [], overrideMessage?: string) {
-    super(HttpResponse.FORBIDDEN, details, overrideMessage);
+    super(HttpResponse.FORBIDDEN(), details, overrideMessage);
   }
 }
 

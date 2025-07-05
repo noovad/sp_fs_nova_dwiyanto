@@ -3,7 +3,7 @@ import { HttpResponse } from "../utils/httpResponse";
 
 class ConflictError extends AppError {
   constructor(details: any[] = [], overrideMessage?: string) {
-    super(HttpResponse.CONFLICT, details, overrideMessage);
+    super(HttpResponse.CONFLICT(), details, overrideMessage);
   }
 }
 

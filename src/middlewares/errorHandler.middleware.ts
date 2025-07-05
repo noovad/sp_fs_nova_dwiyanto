@@ -7,9 +7,9 @@ const errorHandler = (err, req, res, nex) => {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
         const foreignKeyErrorColumn = extractForeignKey(err.meta);
         const prismaErrorMap = {
-            P2002: HttpResponse.CONFLICT,
+            P2002: HttpResponse.CONFLICT("Unique constraint failed"),
             P2003: HttpResponse.BAD_REQUEST(`Foreign key constraint failed on the field: ${foreignKeyErrorColumn}`),
-            P2025: HttpResponse.NOT_FOUND,
+            P2025: HttpResponse.NOT_FOUND("Record not found"),
         };
 
         const errorResponse = prismaErrorMap[err.code] || HttpResponse.DATABASE_ERROR;

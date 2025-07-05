@@ -3,15 +3,6 @@ import asyncHandler from 'express-async-handler';
 import * as userService from "../services/userServices";
 import { HttpResponse } from "../utils/httpResponse";
 
-export const createUser = asyncHandler(
-    async (req: Request, res: Response) => {
-        const user = await userService.createUser(req.body);
-        res.status(201).json(
-            HttpResponse.CREATED('User created successfully', user)
-        );
-    }
-);
-
 export const getAllUsers = asyncHandler(
     async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
