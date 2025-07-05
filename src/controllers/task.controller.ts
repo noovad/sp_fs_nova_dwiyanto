@@ -14,22 +14,12 @@ export const createTaskController = asyncHandler(
 
 export const getAllTasksController = asyncHandler(
     async (req: Request, res: Response) => {
-        const { title, projectName } = req.query;
+        const projectId = req.params.id;
         const tasks = await taskService.getAllTasksService(
-            title as string,
-            projectName as string,
+            projectId
         );
         res.status(200).json(
             HttpResponse.OK('Tasks retrieved successfully', tasks)
-        );
-    }
-);
-
-export const getTaskByIdController = asyncHandler(
-    async (req: Request, res: Response) => {
-        const task = await taskService.getTaskByIdService(req.params.id);
-        res.status(200).json(
-            HttpResponse.OK('Task retrieved successfully', task)
         );
     }
 );

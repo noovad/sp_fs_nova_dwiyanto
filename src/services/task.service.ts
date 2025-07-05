@@ -9,25 +9,15 @@ export const createTaskService = async (data: taskRequest) => {
     return task;
 };
 
-
 export const getAllTasksService = async (
-    title?: string,
-    projectName?: string,
+    projectId: string,
 ) => {
+
     const tasks = await taskRepositories.getAllTasks({
-        title,
-        projectName,
+        projectId,
     });
     return tasks;
 };
-
-export const getTaskByIdService = async (id: string) => {
-    const task = await taskRepositories.getTaskById(id);
-    if (!task) {
-        throw new AppError(HttpResponse.NOT_FOUND);
-    }
-    return task;
-}
 
 export const updateTaskService = async (id: string, data: taskRequest) => {
     const task = await taskRepositories.updateTask(id, data);
