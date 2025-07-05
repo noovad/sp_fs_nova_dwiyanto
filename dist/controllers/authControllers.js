@@ -66,6 +66,13 @@ exports.login = (0, express_async_handler_1.default)(async (req, res) => {
     res.status(200).json(httpResponse_1.HttpResponse.OK('Login successful', result.user));
 });
 exports.logout = (0, express_async_handler_1.default)(async (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        domain: process.env.BACKEND_DOMAIN,
+        path: '/'
+    });
     res.status(200).json(httpResponse_1.HttpResponse.OK('Logout successful'));
 });
