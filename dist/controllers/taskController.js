@@ -48,13 +48,7 @@ exports.createTaskController = (0, express_async_handler_1.default)(async (req, 
         return;
     }
     const task = await taskService.createTaskService(req.body);
-    const socketId = (0, socket_1.getSocketIdByUserId)(userId);
-    if (socketId) {
-        (0, socket_1.getIO)().except(socketId).emit("task:created", task);
-    }
-    else {
-        (0, socket_1.getIO)().emit("task:created", task);
-    }
+    (0, socket_1.emitToProject)(task.projectId, "task:created", task);
     res.status(201).json(httpResponse_1.HttpResponse.CREATED('Task created successfully', task));
 });
 exports.getAllTasksController = (0, express_async_handler_1.default)(async (req, res) => {
@@ -69,13 +63,7 @@ exports.updateTaskController = (0, express_async_handler_1.default)(async (req, 
         return;
     }
     const task = await taskService.updateTaskService(req.params.id, req.body);
-    const socketId = (0, socket_1.getSocketIdByUserId)(userId);
-    if (socketId) {
-        (0, socket_1.getIO)().except(socketId).emit("task:updated", task);
-    }
-    else {
-        (0, socket_1.getIO)().emit("task:updated", task);
-    }
+    (0, socket_1.emitToProject)(task.projectId, "task:updated", task);
     res.status(200).json(httpResponse_1.HttpResponse.OK('Task updated successfully', task));
 });
 exports.deleteTaskController = (0, express_async_handler_1.default)(async (req, res) => {
@@ -85,12 +73,6 @@ exports.deleteTaskController = (0, express_async_handler_1.default)(async (req, 
         return;
     }
     await taskService.deleteTaskService(req.params.id);
-    const socketId = (0, socket_1.getSocketIdByUserId)(userId);
-    if (socketId) {
-        (0, socket_1.getIO)().except(socketId).emit("task:deleted", { taskId: req.params.id });
-    }
-    else {
-        (0, socket_1.getIO)().emit("task:deleted", { taskId: req.params.id });
-    }
+    (0, socket_1.emitToProject)(req.body.projectId || req.query.projectId || req.params.projectId, "task:deleted", { taskId: req.params.id });
     res.status(200).json(httpResponse_1.HttpResponse.OK('Task deleted successfully'));
 });
