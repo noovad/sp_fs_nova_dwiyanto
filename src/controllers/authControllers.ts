@@ -9,8 +9,8 @@ export const register = asyncHandler(
 
         res.cookie('token', result.accessToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000,
             domain: process.env.BACKEND_DOMAIN,
             path: '/'
@@ -28,8 +28,8 @@ export const login = asyncHandler(
         console.log('access result:', result.accessToken);
         res.cookie('token', result.accessToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000,
             domain: process.env.BACKEND_DOMAIN,
             path: '/'
