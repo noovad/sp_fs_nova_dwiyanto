@@ -29,7 +29,7 @@ export const guestMiddleware = async (req: Request, res: Response, next: NextFun
 
             jwt.verify(token, JWT_SECRET) as JwtPayload;
             res.status(403).json(
-                HttpResponse.FORBIDDEN
+                HttpResponse.FORBIDDEN("Already logged in")
             );
             return;
         } catch (error) {

@@ -9,9 +9,11 @@ export const register = asyncHandler(
 
         res.cookie('token', result.accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             sameSite: 'none',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: process.env.BACKEND_DOMAIN,
+            path: '/'
         });
 
         res.status(201).json(
@@ -23,12 +25,14 @@ export const register = asyncHandler(
 export const login = asyncHandler(
     async (req: Request, res: Response) => {
         const result = await authService.login(req.body);
-
+        console.log('access result:', result.accessToken);
         res.cookie('token', result.accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             sameSite: 'none',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: process.env.BACKEND_DOMAIN,
+            path: '/'
         });
 
         res.status(200).json(
