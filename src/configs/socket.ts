@@ -24,7 +24,6 @@ export const initSocket = (server: any) => {
         let userId: string | undefined;
 
         try {
-            // Extract token from handshake auth or cookies
             const token = socket.handshake.auth.token || socket.handshake.headers.cookie?.split('token=')[1]?.split(';')[0];
 
             if (token) {
@@ -63,17 +62,4 @@ export const getIO = () => {
 
 export const getSocketIdByUserId = (userId: string) => {
     return connectedUsers.get(userId);
-};
-
-export const getUserIdFromJwt = (token: string): string | null => {
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-        return decoded.userId;
-    } catch {
-        return null;
-    }
-};
-
-export const getUserIdBySocketId = (socketId: string) => {
-    return socketIdToUserId.get(socketId);
 };
