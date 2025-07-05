@@ -6,9 +6,20 @@ import { getIO, getSocketIdByUserId } from "../configs/socket";
 
 export const createTaskController = asyncHandler(
     async (req: Request, res: Response) => {
+        const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         const task = await taskService.createTaskService(req.body);
-        const socketId = getSocketIdByUserId(req.user?.userId);
-        getIO().except(socketId).emit("task:created", task);
+        const socketId = getSocketIdByUserId(userId);
+        if (socketId) {
+            getIO().except(socketId).emit("task:created", task);
+        } else {
+            getIO().emit("task:created", task);
+        }
         res.status(201).json(
             HttpResponse.CREATED('Task created successfully', task)
         );
@@ -29,9 +40,20 @@ export const getAllTasksController = asyncHandler(
 
 export const updateTaskController = asyncHandler(
     async (req: Request, res: Response) => {
+        const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         const task = await taskService.updateTaskService(req.params.id, req.body);
-        const socketId = getSocketIdByUserId(req.user?.userId);
-        getIO().except(socketId).emit("task:updated", task);
+        const socketId = getSocketIdByUserId(userId);
+        if (socketId) {
+            getIO().except(socketId).emit("task:updated", task);
+        } else {
+            getIO().emit("task:updated", task);
+        }
         res.status(200).json(
             HttpResponse.OK('Task updated successfully', task)
         );
@@ -40,9 +62,20 @@ export const updateTaskController = asyncHandler(
 
 export const deleteTaskController = asyncHandler(
     async (req: Request, res: Response) => {
+        const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         await taskService.deleteTaskService(req.params.id);
-        const socketId = getSocketIdByUserId(req.user?.userId);
-        getIO().except(socketId).emit("task:deleted", { taskId: req.params.id });
+        const socketId = getSocketIdByUserId(userId);
+        if (socketId) {
+            getIO().except(socketId).emit("task:deleted", { taskId: req.params.id });
+        } else {
+            getIO().emit("task:deleted", { taskId: req.params.id });
+        }
         res.status(200).json(
             HttpResponse.OK('Task deleted successfully')
         );

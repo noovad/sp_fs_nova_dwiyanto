@@ -15,6 +15,12 @@ export const getAllUsers = asyncHandler(
 export const getMeByEmail = asyncHandler(
     async (req: Request, res: Response) => {
         const userEmail = req.user?.email;
+        if (!userEmail) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User email not found')
+            );
+            return;
+        }
         const user = await userService.getUserByEmail(userEmail);
         res.status(200).json(
             HttpResponse.OK('User retrieved successfully', user)

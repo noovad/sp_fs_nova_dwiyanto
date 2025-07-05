@@ -6,6 +6,10 @@ import projectMemberRoute from "./projectMemberRoute";
 import authRoute from "./authRoute";
 
 export default function registerRoutes(app: express.Application) {
+    app.get("/", (_, res) => {
+        res.status(200).send("Server is healthy");
+    });
+
     app.use('/', authRoute);
     app.use('/', taskRoute);
     app.use('/', userRoute);

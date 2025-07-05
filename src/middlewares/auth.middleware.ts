@@ -32,6 +32,10 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return;
         }
 
+        if (!JWT_SECRET) {
+            throw new Error("JWT_SECRET is not defined");
+        }
+
         const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
         req.user = decoded;
         next();

@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import asyncHandler from 'express-async-handler';
 import * as projectService from "../services/projectServices";
 import { HttpResponse } from "../utils/httpResponse";
-import { getIO, getSocketIdByUserId } from "../configs/socket";
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
         const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         const project = await projectService.createProject(req.body, userId);
         res.status(201).json(
             HttpResponse.CREATED('Project created successfully', project)
@@ -17,6 +22,12 @@ export const createProject = asyncHandler(
 export const getAllProjects = asyncHandler(
     async (req: Request, res: Response) => {
         const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         const projects = await projectService.getAllProjects({
             ownerId: userId,
         });
@@ -29,6 +40,12 @@ export const getAllProjects = asyncHandler(
 export const getProjectBySlug = asyncHandler(
     async (req: Request, res: Response) => {
         const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         const project = await projectService.getProjectBySlug(req.params.slug, userId);
         res.status(200).json(
             HttpResponse.OK('Project retrieved successfully', project)
@@ -39,9 +56,13 @@ export const getProjectBySlug = asyncHandler(
 export const updateProject = asyncHandler(
     async (req: Request, res: Response) => {
         const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         const project = await projectService.updateProject(req.params.id, req.body, userId);
-        const socketId = getSocketIdByUserId(req.user?.userId);
-        getIO().except(socketId).emit("project:updated", project);
         res.status(200).json(
             HttpResponse.OK('Project updated successfully', project)
         );
@@ -51,9 +72,13 @@ export const updateProject = asyncHandler(
 export const deleteProject = asyncHandler(
     async (req: Request, res: Response) => {
         const userId = req.user?.userId;
+        if (!userId) {
+            res.status(401).json(
+                HttpResponse.UNAUTHORIZED('User not authenticated')
+            );
+            return;
+        }
         await projectService.deleteProject(req.params.id, userId);
-        const socketId = getSocketIdByUserId(req.user?.userId);
-        getIO().except(socketId).emit("project:deleted", { projectId: req.params.id });
         res.status(200).json(
             HttpResponse.OK('Project deleted successfully')
         );
