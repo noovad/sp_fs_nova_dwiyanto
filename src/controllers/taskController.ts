@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from 'express-async-handler';
 import * as taskService from "../services/taskService";
 import { HttpResponse } from "../utils/httpResponse";
-import { getIO, getSocketIdByUserId } from "../configs/socket";
+import { emitToProject } from "../configs/socket";
 
 export const createTaskController = asyncHandler(
     async (req: Request, res: Response) => {
@@ -14,12 +14,7 @@ export const createTaskController = asyncHandler(
             return;
         }
         const task = await taskService.createTaskService(req.body);
-        const socketId = getSocketIdByUserId(userId);
-        if (socketId) {
-            getIO().except(socketId).emit("task:created", task);
-        } else {
-            getIO().emit("task:created", task);
-        }
+        emitToProject(task.projectId, "task:created", task);
         res.status(201).json(
             HttpResponse.CREATED('Task created successfully', task)
         );
@@ -48,12 +43,7 @@ export const updateTaskController = asyncHandler(
             return;
         }
         const task = await taskService.updateTaskService(req.params.id, req.body);
-        const socketId = getSocketIdByUserId(userId);
-        if (socketId) {
-            getIO().except(socketId).emit("task:updated", task);
-        } else {
-            getIO().emit("task:updated", task);
-        }
+        emitToProject(task.projectId, "task:updated", task);
         res.status(200).json(
             HttpResponse.OK('Task updated successfully', task)
         );
@@ -70,12 +60,7 @@ export const deleteTaskController = asyncHandler(
             return;
         }
         await taskService.deleteTaskService(req.params.id);
-        const socketId = getSocketIdByUserId(userId);
-        if (socketId) {
-            getIO().except(socketId).emit("task:deleted", { taskId: req.params.id });
-        } else {
-            getIO().emit("task:deleted", { taskId: req.params.id });
-        }
+        emitToProject(req.body.projectId || req.query.projectId || req.params.projectId, "task:deleted", { taskId: req.params.id });
         res.status(200).json(
             HttpResponse.OK('Task deleted successfully')
         );
