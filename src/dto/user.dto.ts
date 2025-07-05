@@ -9,8 +9,3 @@ export interface userResponse {
     createdAt: Date;
     updatedAt: Date;
 }
-
-export interface userUpdate {
-    email?: string;
-    password?: string;
-}

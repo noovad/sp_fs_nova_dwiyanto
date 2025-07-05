@@ -4,6 +4,14 @@ import { projectMemberRequest } from "../dto/projectMember.dto";
 export const createProjectMember = async (data: projectMemberRequest) => {
     return prisma.membership.create({
         data,
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    email: true,
+                },
+            },
+        },
     });
 };
 
@@ -68,6 +76,30 @@ export const findProjectMember = async (userId: string, projectId: string) => {
         where: {
             userId,
             projectId,
+        },
+    });
+};
+
+export const findProjectMemberByEmail = async (email: string) => {
+    return prisma.membership.findFirst({
+        where: {
+            user: {
+                email,
+            },
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    email: true,
+                },
+            },
+            project: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
         },
     });
 };

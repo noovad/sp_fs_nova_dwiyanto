@@ -23,26 +23,26 @@ export const HttpResponse = {
         message: customMessage || "Bad Request",
         code: "BAD_REQUEST",
     }),
-    CONFLICT: {
+    CONFLICT: (customMessage?: string) => ({
         status: 409,
-        message: "Data already exists.",
+        message: customMessage || "Data already exists.",
         code: "CONFLICT",
-    },
-    UNAUTHORIZED: {
+    }),
+    UNAUTHORIZED: (customMessage?: string) => ({
         status: 401,
-        message: "Unauthorized",
+        message: customMessage || "Unauthorized",
         code: "UNAUTHORIZED",
-    },
-    FORBIDDEN: {
+    }),
+    FORBIDDEN: (customMessage?: string) => ({
         status: 403,
-        message: "Forbidden",
+        message: customMessage || "Forbidden",
         code: "FORBIDDEN",
-    },
-    NOT_FOUND: {
+    }),
+    NOT_FOUND: (customMessage?: string) => ({
         status: 404,
-        message: "Not Found",
+        message: customMessage || "Not Found",
         code: "NOT_FOUND",
-    },
+    }),
 
     /**
      * Server Error Responses

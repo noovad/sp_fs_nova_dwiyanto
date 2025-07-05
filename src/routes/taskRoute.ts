@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as taskController from '../controllers/task.controller';
+import * as taskController from '../controllers/taskController';
 import { createTaskValidator, updateTaskValidator } from '../validators/task.validator';
 import { validate } from '../middlewares/validate.middleware';
 import { authMiddleware } from '../middlewares/auth.middleware';

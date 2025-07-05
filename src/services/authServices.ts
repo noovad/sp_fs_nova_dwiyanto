@@ -1,4 +1,4 @@
-import * as userRepository from "../repositories/user.repositories";
+import * as userRepository from "../repositories/userRepositories";
 import { registerRequest, loginRequest } from "../dto/auth.dto";
 import AppError from "../errors/app.error";
 import { HttpResponse } from "../utils/httpResponse";
@@ -11,7 +11,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 export const register = async (data: registerRequest) => {
     const existingUser = await userRepository.getUserByEmail(data.email);
     if (existingUser) {
-        throw new AppError(HttpResponse.CONFLICT);
+        throw new AppError(HttpResponse.CONFLICT("Email already registered"));
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -38,12 +38,12 @@ export const register = async (data: registerRequest) => {
 export const login = async (data: loginRequest) => {
     const user = await userRepository.getUserByEmail(data.email);
     if (!user) {
-        throw new AppError(HttpResponse.UNAUTHORIZED);
+        throw new AppError(HttpResponse.UNAUTHORIZED("Invalid email or password"));
     }
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-        throw new AppError(HttpResponse.UNAUTHORIZED);
+        throw new AppError(HttpResponse.UNAUTHORIZED("Invalid email or password"));
     }
 
     const accessToken = jwt.sign(

@@ -3,6 +3,11 @@ export interface projectMemberRequest {
     projectId: string;
 }
 
+export interface projectMemberRequestByEmail {
+    email: string;
+    projectId: string;
+}
+
 export interface projectMemberResponse {
     id: string;
     userId: string;

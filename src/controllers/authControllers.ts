@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from 'express-async-handler';
-import * as authService from "../services/auth.services";
+import * as authService from "../services/authServices";
 import { HttpResponse } from "../utils/httpResponse";
 
 export const register = asyncHandler(

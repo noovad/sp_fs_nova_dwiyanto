@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from 'express-async-handler';
-import * as projectService from "../services/project.services";
+import * as projectService from "../services/projectServices";
 import { HttpResponse } from "../utils/httpResponse";
 
 export const createProject = asyncHandler(

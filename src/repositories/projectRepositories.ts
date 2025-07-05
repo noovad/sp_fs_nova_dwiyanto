@@ -30,10 +30,18 @@ export const getAllProjects = async (options: { ownerId: string }) => {
                     email: true,
                 },
             },
+            tasks: true,
         },
     });
 };
 
+export const getProjectById = async (id: string) => {
+    return prisma.project.findFirst({
+        where: {
+            id,
+        },
+    });
+};
 
 export const getProjectByName = async (name: string, userId: string) => {
     return prisma.project.findFirst({
