@@ -41,28 +41,6 @@ export const getAllProjectMembers = async (projectId?: string) => {
     });
 };
 
-export const getProjectMemberById = async (id: string) => {
-    return prisma.membership.findUnique({
-        where: {
-            id,
-        },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    email: true,
-                },
-            },
-            project: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
-        },
-    });
-};
-
 export const deleteProjectMember = async (id: string) => {
     return prisma.membership.delete({
         where: {

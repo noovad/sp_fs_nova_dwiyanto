@@ -46,8 +46,7 @@ export const updateProject = async (id: string, data: projectUpdate, userId: str
         throw new AppError(HttpResponse.FORBIDDEN("Only the project owner can update this project"));
     }
 
-    const project = await projectRepository.updateProject(id, data);
-    return project;
+    return await projectRepository.updateProject(id, data);
 };
 
 export const deleteProject = async (id: string, userId: string) => {
@@ -64,6 +63,5 @@ export const deleteProject = async (id: string, userId: string) => {
         throw new AppError(HttpResponse.FORBIDDEN("Only the project owner can delete this project"));
     }
 
-    const project = await projectRepository.deleteProject(id);
-    return project;
+    return await projectRepository.deleteProject(id);
 };

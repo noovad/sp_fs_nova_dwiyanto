@@ -45,18 +45,6 @@ export const getAllProjectMembers = async (projectId?: string) => {
     return projectMemberRepository.getAllProjectMembers(projectId);
 };
 
-export const getProjectMemberById = async (id: string) => {
-    const member = await projectMemberRepository.getProjectMemberById(id);
-    if (!member) {
-        throw new AppError(HttpResponse.NOT_FOUND("Project member not found"));
-    }
-    return member;
-};
-
 export const deleteProjectMember = async (id: string) => {
-    const member = await projectMemberRepository.deleteProjectMember(id);
-    if (!member) {
-        throw new AppError(HttpResponse.NOT_FOUND("Project member not found"));
-    }
-    return member;
+    return await projectMemberRepository.deleteProjectMember(id);
 };

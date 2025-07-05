@@ -1,26 +1,54 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+import jwt from "jsonwebtoken";
+
+interface JwtPayload {
+    userId: string;
+    email: string;
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
 let io: Server;
+const connectedUsers = new Map<string, string>();
+const socketIdToUserId = new Map<string, string>();
 
 export const initSocket = (server: any) => {
-    console.log("Initializing Socket.io");
     io = new Server(server, {
         cors: {
-            origin: "*",
+            origin: process.env.FE_URL,
+            credentials: true,
         },
     });
 
-    io.on("connection", (socket) => {
-        const { userId, projectId } = socket.handshake.query;
+    io.on("connection", (socket: Socket) => {
+        let userId: string | undefined;
 
-        if (userId) {
-            socket.join(`user:${userId}`);
+        try {
+            // Extract token from handshake auth or cookies
+            const token = socket.handshake.auth.token || socket.handshake.headers.cookie?.split('token=')[1]?.split(';')[0];
+
+            if (token) {
+                const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+                userId = decoded.userId;
+            }
+        } catch (error) {
+            console.log("Failed to authenticate socket connection:", error);
         }
 
-        if (projectId) {
-            socket.join(`project:${projectId}`);
+        if (userId) {
+            connectedUsers.set(userId, socket.id);
+            socketIdToUserId.set(socket.id, userId);
+
+            console.log(`User ${userId} connected as ${socket.id}`);
+        } else {
+            console.log(`Unauthenticated socket ${socket.id} connected`);
         }
 
         socket.on("disconnect", () => {
+            if (userId) {
+                connectedUsers.delete(userId);
+            }
+            socketIdToUserId.delete(socket.id);
             console.log(`Socket ${socket.id} disconnected`);
         });
     });
@@ -31,4 +59,21 @@ export const initSocket = (server: any) => {
 export const getIO = () => {
     if (!io) throw new Error("Socket.io not initialized");
     return io;
+};
+
+export const getSocketIdByUserId = (userId: string) => {
+    return connectedUsers.get(userId);
+};
+
+export const getUserIdFromJwt = (token: string): string | null => {
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+        return decoded.userId;
+    } catch {
+        return null;
+    }
+};
+
+export const getUserIdBySocketId = (socketId: string) => {
+    return socketIdToUserId.get(socketId);
 };
