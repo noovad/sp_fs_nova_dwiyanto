@@ -8,8 +8,6 @@ import { HttpResponse } from "../utils/httpResponse";
 export const createTaskService = async (data: taskRequest) => {
     const isMember = await findProjectMember(data.assigneeId, data.projectId);
     const isOwner = await checkIsOwner(data.assigneeId, data.projectId);
-    console.log("isMember", isMember);
-    console.log("isOwner", isOwner);
     if (!isMember && !isOwner) {
         throw new AppError(HttpResponse.FORBIDDEN("Asignee must be a member or owner of the project"));
     }
@@ -28,11 +26,12 @@ export const getAllTasksService = async (
 };
 
 export const updateTaskService = async (id: string, data: taskRequest) => {
-    const isMember = await findProjectMember(data.projectId, data.assigneeId);
-    const isOwner = await checkIsOwner(data.projectId, data.assigneeId);
+    const isMember = await findProjectMember(data.assigneeId, data.projectId);
+    const isOwner = await checkIsOwner(data.assigneeId, data.projectId);
     if (!isMember && !isOwner) {
         throw new AppError(HttpResponse.FORBIDDEN("Asignee must be a member or owner of the project"));
     }
+
     const task = await taskRepositories.updateTask(id, data);
     if (!task) {
         throw new AppError(HttpResponse.NOT_FOUND("Task not found"));

@@ -21,6 +21,16 @@ export const getAllUsers = asyncHandler(
     }
 );
 
+export const getMeByEmail = asyncHandler(
+    async (req: Request, res: Response) => {
+        const userEmail = req.user?.email;
+        const user = await userService.getUserByEmail(userEmail);
+        res.status(200).json(
+            HttpResponse.OK('User retrieved successfully', user)
+        );
+    }
+);
+
 export const deleteUser = asyncHandler(
     async (req: Request, res: Response) => {
         await userService.deleteUser(req.params.id);
