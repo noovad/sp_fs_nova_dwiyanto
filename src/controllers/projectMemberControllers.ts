@@ -5,7 +5,8 @@ import { HttpResponse } from "../utils/httpResponse";
 
 export const createProjectMember = asyncHandler(
     async (req: Request, res: Response) => {
-        const member = await projectMemberService.createProjectMember(req.body);
+        const { userId } = req.user;
+        const member = await projectMemberService.createProjectMember(req.body, userId);
         res.status(201).json(
             HttpResponse.CREATED('Project member added successfully', member)
         );

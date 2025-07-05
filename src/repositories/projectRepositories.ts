@@ -99,3 +99,14 @@ export const deleteProject = async (id: string) => {
         },
     });
 };
+
+export const checkIsOwner = async (projectId: string, userId: string) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            id: projectId,
+            ownerId: userId,
+        },
+        select: { id: true },
+    });
+    return !!project;
+};

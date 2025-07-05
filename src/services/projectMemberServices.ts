@@ -5,7 +5,17 @@ import { HttpResponse } from "../utils/httpResponse";
 import { getUserByEmail } from "../repositories/userRepositories";
 import { getProjectById } from "../repositories/projectRepositories";
 
-export const createProjectMember = async (data: projectMemberRequestByEmail) => {
+export const createProjectMember = async (data: projectMemberRequestByEmail, requesterId: string) => {
+    const project = await getProjectById(data.projectId);
+    if (!project) {
+        throw new AppError(HttpResponse.NOT_FOUND("Project not found"));
+    }
+
+    // Only owner can add member
+    if (project.ownerId !== requesterId) {
+        throw new AppError(HttpResponse.FORBIDDEN("Only the project owner can add members"));
+    }
+
     const existingMember = await projectMemberRepository.findProjectMemberByEmail(
         data.email,
     );
@@ -16,11 +26,6 @@ export const createProjectMember = async (data: projectMemberRequestByEmail) => 
     const user = await getUserByEmail(data.email);
     if (!user) {
         throw new AppError(HttpResponse.NOT_FOUND("User not found"));
-    }
-
-    const project = await getProjectById(data.projectId);
-    if (!project) {
-        throw new AppError(HttpResponse.NOT_FOUND("Project not found"));
     }
 
     if (user.id === project.ownerId) {
