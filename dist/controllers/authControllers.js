@@ -46,17 +46,22 @@ exports.register = (0, express_async_handler_1.default)(async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        domain: process.env.BACKEND_DOMAIN,
+        path: '/'
     });
     res.status(201).json(httpResponse_1.HttpResponse.CREATED('User registered successfully', result.user));
 });
 exports.login = (0, express_async_handler_1.default)(async (req, res) => {
     const result = await authService.login(req.body);
+    console.log('access result:', result.accessToken);
     res.cookie('token', result.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        domain: process.env.BACKEND_DOMAIN,
+        path: '/'
     });
     res.status(200).json(httpResponse_1.HttpResponse.OK('Login successful', result.user));
 });

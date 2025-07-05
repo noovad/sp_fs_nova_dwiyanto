@@ -22,7 +22,7 @@ const guestMiddleware = async (req, res, next) => {
                 throw new Error("JWT_SECRET is not defined");
             }
             jsonwebtoken_1.default.verify(token, JWT_SECRET);
-            res.status(403).json(httpResponse_1.HttpResponse.FORBIDDEN);
+            res.status(403).json(httpResponse_1.HttpResponse.FORBIDDEN("Already logged in"));
             return;
         }
         catch (error) {
