@@ -3,9 +3,3 @@ export interface userRequest {
     password: string;
 }
 
-export interface userResponse {
-    id: string;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
